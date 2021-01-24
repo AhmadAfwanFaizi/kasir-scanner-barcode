@@ -11,15 +11,12 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="tabelDataProduk" class="table table-bordered table-striped">
+                        <table id="tabelDataSupplier" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Kode Produk</th>
-                                    <th>Nama Produk</th>
-                                    <th>Platform(s)</th>
-                                    <th>Jenis Produk</th>
-                                    <th>Satuan Produk</th>
-                                    <th>Supplier</th>
+                                    <th>Nama Supplier</th>
+                                    <th>Kontak Supplier</th>
+                                    <th>Alamat Supplier</th>
                                     <th>Opsi</th>
                                 </tr>
                             </thead>
@@ -28,9 +25,6 @@
                                     <td>Misc</td>
                                     <td>IE Mobile</td>
                                     <td>Windows Mobile 6</td>
-                                    <td>-</td>
-                                    <td>C</td>
-                                    <td>C</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button>
                                         <button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>
@@ -40,9 +34,6 @@
                                     <td>Misc</td>
                                     <td>PSP browser</td>
                                     <td>PSP</td>
-                                    <td>-</td>
-                                    <td>C</td>
-                                    <td>C</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button>
                                         <button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>
@@ -52,9 +43,6 @@
                                     <td>Other browsers</td>
                                     <td>All others</td>
                                     <td>-</td>
-                                    <td>-</td>
-                                    <td>U</td>
-                                    <td>C</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button>
                                         <button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>
@@ -63,12 +51,9 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>Kode Produk</th>
-                                    <th>Nama Produk</th>
-                                    <th>Platform(s)</th>
-                                    <th>Jenis Produk</th>
-                                    <th>Satuan Produk</th>
-                                    <th>Supplier</th>
+                                    <th>Nama Supplier</th>
+                                    <th>Kontak Supplier</th>
+                                    <th>Alamat Supplier</th>
                                     <th>Opsi</th>
                                 </tr>
                             </tfoot>
@@ -133,7 +118,7 @@
 
 <script>
     $(function() {
-        $("#tabelDataProduk").DataTable({
+        $("#tabelDataSupplier").DataTable({
             "responsive": true,
             "autoWidth": false,
         });

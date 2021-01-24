@@ -2,14 +2,14 @@
 
 namespace App\Controllers;
 
-class Dashboard extends BaseController
+class Supplier extends BaseController
 {
     public function index()
     {
         $data = [
-            'page' => 'dashboard'
+            'page' => 'data supplier',
         ];
-        return view('dashboard/dashboard', $data);
+        return view('supplier/data', $data);
     }
 
     //--------------------------------------------------------------------

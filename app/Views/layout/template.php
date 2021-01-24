@@ -27,12 +27,11 @@
     <link rel="stylesheet" href="<?= base_url('') ?>/assets/plugins/summernote/summernote-bs4.css">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="<?= base_url() ?>/assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
-
-    <!-- jQuery -->
-    <script src="<?= base_url() ?>/assets/plugins/jquery/jquery.min.js"></script>
 
     <div class="wrapper">
 
@@ -118,7 +117,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0 text-dark">Dashboard</h1>
+                            <h1 class="m-0 text-dark"><?= ucwords($page) ?></h1>
                         </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -129,6 +128,11 @@
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>
+
+            <!-- jQuery -->
+            <script src="<?= base_url() ?>/assets/plugins/jquery/jquery.min.js"></script>
+            <!-- ChartJS -->
+            <script src="<?= base_url() ?>/assets/plugins/chart.js/Chart.min.js"></script>
 
             <!-- /.content-header -->
             <?= $this->renderSection('content') ?>
@@ -153,7 +157,6 @@
     </div>
     <!-- ./wrapper -->
 
-
     <!-- jQuery UI 1.11.4 -->
     <script src="<?= base_url() ?>/assets/plugins/jquery-ui/jquery-ui.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -162,8 +165,6 @@
     </script>
     <!-- Bootstrap 4 -->
     <script src="<?= base_url() ?>/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- ChartJS -->
-    <script src="<?= base_url() ?>/assets/plugins/chart.js/Chart.min.js"></script>
     <!-- Sparkline -->
     <script src="<?= base_url() ?>/assets/plugins/sparklines/sparkline.js"></script>
     <!-- JQVMap -->
@@ -186,6 +187,12 @@
     <script src="<?= base_url() ?>/assets/dist/js/pages/dashboard.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="<?= base_url() ?>/assets/dist/js/demo.js"></script>
+    <!-- DataTables -->
+    <script src="<?= base_url() ?>/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="<?= base_url() ?>/assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="<?= base_url() ?>/assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="<?= base_url() ?>/assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
 </body>
 
 </html>

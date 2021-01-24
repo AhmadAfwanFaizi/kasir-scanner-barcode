@@ -1,7 +1,7 @@
 <nav class="mt-2">
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
-            <a href="<?= base_url('') ?>/assets/pages/gallery.html" class="nav-link">
+            <a href="<?= base_url() ?>" class="nav-link">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                     Dashboard
@@ -18,19 +18,19 @@
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="./index.html" class="nav-link">
+                    <a href="<?= base_url() ?>/Produk/data" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Data Produk</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="./index2.html" class="nav-link">
+                    <a href="<?= base_url() ?>/Produk/kategori" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Kategori Produk</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="./index3.html" class="nav-link">
+                    <a href="<?= base_url() ?>/Produk/satuan" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Satuan Produk</p>
                     </a>
@@ -61,7 +61,7 @@
             </ul>
         </li>
         <li class="nav-item">
-            <a href="<?= base_url('') ?>/assets/pages/widgets.html" class="nav-link">
+            <a href="<?= base_url() ?>/Supplier" class="nav-link">
                 <i class="nav-icon fas fa-truck"></i>
                 <p>
                     Supplier
@@ -69,7 +69,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="<?= base_url('') ?>/assets/pages/widgets.html" class="nav-link">
+            <a href="<?= base_url() ?>/Transaksi" class="nav-link">
                 <i class="nav-icon fas fa-exchange-alt"></i>
                 <p>
                     Transaksi
@@ -77,7 +77,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="<?= base_url('') ?>/assets/pages/widgets.html" class="nav-link">
+            <a href="<?= base_url() ?>/assets/pages/widgets.html" class="nav-link">
                 <i class="nav-icon fas fa-cog"></i>
                 <p>
                     Pengaturan

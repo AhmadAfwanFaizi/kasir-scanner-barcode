@@ -2,14 +2,14 @@
 
 namespace App\Controllers;
 
-class Dashboard extends BaseController
+class Transaksi extends BaseController
 {
     public function index()
     {
         $data = [
-            'page' => 'dashboard'
+            'page' => 'transaksi',
         ];
-        return view('dashboard/dashboard', $data);
+        return view('transaksi/transaksi', $data);
     }
 
     //--------------------------------------------------------------------
