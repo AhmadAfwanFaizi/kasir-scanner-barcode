@@ -12,6 +12,11 @@ class Supplier extends BaseController
         return view('supplier/data', $data);
     }
 
+    public function tambah()
+    {
+        $post = $this->request->getPost();
+    }
+
     //--------------------------------------------------------------------
 
 }

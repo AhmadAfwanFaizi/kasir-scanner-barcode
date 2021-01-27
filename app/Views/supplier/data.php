@@ -1,4 +1,4 @@
-<?= $this->extend('layout/template') ?>
+`<?= $this->extend('layout/template') ?>
 <?= $this->section('content') ?>
 
 <section class="content">
@@ -73,40 +73,32 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah Data Produk</h4>
+                    <h4 class="modal-title">Tambah Data Supplier</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form role="form">
+                    <form role="form" id="formTambahSupplier">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="kodeProduk">Kode Produk</label>
-                                <input type="text" class="form-control" id="kodeProduk" placeholder="Kode Produk" autofocus>
+                                <label for="namaSupplier">Nama Supplier</label>
+                                <input type="text" class="form-control" name="namaSupplier" id="namaSupplier" placeholder="Nama Supplier">
                             </div>
                             <div class="form-group">
-                                <label for="namaProduk">Nama Produk</label>
-                                <input type="text" class="form-control" id="namaProduk" placeholder="Nama Produk">
+                                <label for="kontakSupplier">Kontak Supplier</label>
+                                <input type="text" class="form-control" name="kontakSupplier" id="kontakSupplier" placeholder="kontak Supplier" autofocus>
                             </div>
                             <div class="form-group">
-                                <label for="jenisProduk">Jenis Produk</label>
-                                <select class="form-control" id="jenisProduk">
-                                    <option value="">Pilih</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="satuanProduk">satuan Produk</label>
-                                <select class="form-control" id="satuanProduk">
-                                    <option value="">Pilih</option>
-                                </select>
+                                <label for="alamatSupplier">Alamat Supplier</label>
+                                <textarea class="form-control" name="alamatSupplier" id="alamatSupplier" cols="30" rows="5"></textarea>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-primary" onclick="tambahDataSupplier()">Simpan</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -122,9 +114,19 @@
             "responsive": true,
             "autoWidth": false,
         });
-
-
     });
+
+    function tambahDataSupplier() {
+        const data = $("#formTambahSupplier").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Supplier/tambah",
+            data: data,
+            success: (res) => {
+                console.log('ok');
+            }
+        });
+    }
 </script>
 
-<?= $this->endSection() ?>
+<?= $this->endSection() ?>`
