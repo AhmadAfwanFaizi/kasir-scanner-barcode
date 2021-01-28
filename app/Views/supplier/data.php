@@ -123,7 +123,8 @@
             url: "<?= base_url() ?>/Supplier/tambah",
             data: data,
             success: (res) => {
-                console.log('ok');
+                console.log(res);
+                if (res == 200) notif('Data berhasil ditambahkan');
             }
         });
     }
