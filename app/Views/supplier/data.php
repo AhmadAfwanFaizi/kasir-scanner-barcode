@@ -102,7 +102,7 @@
                 console.log(res);
                 if (res == 200) {
                     notif('Data berhasil ditambahkan');
-
+                    $("#tabelDataSupplier").DataTable().ajax.reload();
                 }
             }
         });

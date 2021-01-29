@@ -1,19 +1,24 @@
 <?php
 
-namespace App\Models;
+namespace App\Libraries;
 
-use CodeIgniter\Model;
-
-class Supplier_m extends Model
+class coba
 {
+
     protected $column_order  = array('kode_supplier', 'nama_supplier', 'kontak_supplier', 'alamat_supplier');
     protected $column_search = array('kode_supplier', 'nama_supplier', 'kontak_supplier', 'alamat_supplier');
     protected $order         = array('nama_supplier' => 'asc');
+    protected $db;
 
     public function __construct()
     {
-        parent::__construct();
+        $this->db = db_connect();
         $this->builder = $this->db->table("supplier");
+    }
+
+    public function tableName($table = null)
+    {
+        return $table;
     }
 
     private function _get_datatables_query($post = null)
@@ -57,18 +62,32 @@ class Supplier_m extends Model
     public function count_all()
     {
         $this->builder->where("dihapus", NULL);
-        return $this->countAllResults();
+        return $this->builder->countAllResults();
     }
 
-    public function tambah($post)
+    public function output($post)
     {
-        $data = [
-            "id_user" => 1,
-            "kode_supplier" => uniqid(),
-            "nama_supplier" => $post['namaSupplier'],
-            "kontak_supplier" => $post['kontakSupplier'],
-            "alamat_supplier" => $post['alamatSupplier'],
+        $lists = $this->get_datatables($post);
+        $data = [];
+        $no = $post["start"];
+        foreach ($lists as $list) {
+            $no++;
+            $row      = [];
+            $row[]    = $no;
+            $row[]    = $list->kode_supplier;
+            $row[]    = $list->nama_supplier;
+            $row[]    = $list->kontak_supplier;
+            $row[]    = $list->alamat_supplier;
+            $row[]    = '<button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button> ' .
+                '<button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>';
+            $data[]   = $row;
+        }
+        $output = [
+            "draw"            => $post['draw'],
+            "recordsTotal"    => $this->count_all(),
+            "recordsFiltered" => $this->count_filtered(),
+            "data"            => $data
         ];
-        $this->db->table("supplier")->insert($data);
+        echo json_encode($output);
     }
 }

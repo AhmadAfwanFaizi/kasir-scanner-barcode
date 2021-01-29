@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Supplier_m;
+use App\Libraries\coba;
 
 class Supplier extends BaseController
 {
@@ -10,6 +11,7 @@ class Supplier extends BaseController
     {
         $this->db = db_connect();
         $this->supplier_m = new Supplier_m();
+        $this->coba = new coba();
     }
 
     public function index()
@@ -20,6 +22,14 @@ class Supplier extends BaseController
         ];
 
         return view('supplier/data', $data);
+    }
+
+    public function coba()
+    {
+        if ($this->request->getMethod(true) == 'POST') {
+            $c = $this->coba->output();
+            var_dump($c);
+        }
     }
 
     public function dataTableSupplier()
