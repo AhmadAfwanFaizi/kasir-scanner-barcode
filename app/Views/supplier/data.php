@@ -14,6 +14,8 @@
                         <table id="tabelDataSupplier" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
+                                    <th>#</th>
+                                    <th>Kode Supplier</th>
                                     <th>Nama Supplier</th>
                                     <th>Kontak Supplier</th>
                                     <th>Alamat Supplier</th>
@@ -21,42 +23,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Misc</td>
-                                    <td>IE Mobile</td>
-                                    <td>Windows Mobile 6</td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button>
-                                        <button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Misc</td>
-                                    <td>PSP browser</td>
-                                    <td>PSP</td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button>
-                                        <button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Other browsers</td>
-                                    <td>All others</td>
-                                    <td>-</td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button>
-                                        <button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
+
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Nama Supplier</th>
-                                    <th>Kontak Supplier</th>
-                                    <th>Alamat Supplier</th>
-                                    <th>Opsi</th>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                     <!-- /.card-body -->
@@ -111,8 +79,16 @@
 <script>
     $(function() {
         $("#tabelDataSupplier").DataTable({
-            "responsive": true,
-            "autoWidth": false,
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: "<?= base_url() ?>/Supplier/dataTableSupplier",
+                type: 'POST',
+            },
+            "columnDefs": [{
+                "targets": [0],
+                "orderable": false,
+            }],
         });
     });
 
@@ -124,7 +100,10 @@
             data: data,
             success: (res) => {
                 console.log(res);
-                if (res == 200) notif('Data berhasil ditambahkan');
+                if (res == 200) {
+                    notif('Data berhasil ditambahkan');
+
+                }
             }
         });
     }

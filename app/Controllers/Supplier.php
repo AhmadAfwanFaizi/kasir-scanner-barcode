@@ -8,7 +8,7 @@ class Supplier extends BaseController
 {
     public function __construct()
     {
-        $this->db = \Config\Database::connect();
+        $this->db = db_connect();
         $this->supplier_m = new Supplier_m();
     }
 
@@ -16,11 +16,39 @@ class Supplier extends BaseController
     {
         $data = [
             'page' => 'data supplier',
-            'data' => $this->supplier_m->get(),
+            'data' => $this->supplier_m->get()->getResult(),
         ];
-        var_dump($data);
-        die;
+
         return view('supplier/data', $data);
+    }
+
+    public function dataTableSupplier()
+    {
+        if ($this->request->getMethod(true) == 'POST') {
+            $post = $this->request->getPost();
+            $lists = $this->supplier_m->get_datatables($post);
+            $data = [];
+            $no = $this->request->getPost("start");
+            foreach ($lists as $list) {
+                $no++;
+                $row      = [];
+                $row[]    = $no;
+                $row[]    = $list->kode_supplier;
+                $row[]    = $list->nama_supplier;
+                $row[]    = $list->kontak_supplier;
+                $row[]    = $list->alamat_supplier;
+                $row[]    = '<button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button> ' .
+                    '<button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>';
+                $data[]   = $row;
+            }
+            $output = [
+                "draw"            => $this->request->getPost('draw'),
+                "recordsTotal"    => $this->supplier_m->count_all(),
+                "recordsFiltered" => $this->supplier_m->count_filtered(),
+                "data"            => $data
+            ];
+            echo json_encode($output);
+        }
     }
 
     public function tambah()
