@@ -73,6 +73,8 @@
         </div>
     </div>
 
+
+
 </section>
 
 <script>
@@ -157,6 +159,35 @@
                 }
             }
         })
+    }
+
+    function formHapusDataSupplier(kodeSupplier) {
+        $("#modalTitle").text("Hapus Data");
+        $("#modalContent").text("Apakah Anda Yakin?");
+        $(".modalAlertButton").removeAttr("id");
+        $("#modal-alert").modal("show");
+        $(".modalAlertButton").attr("id", "hapusDataSupplier");
+        $("#hapusDataSupplier").click(() => {
+            hapusDataSupplier(kodeSupplier)
+        });
+    }
+
+    function hapusDataSupplier(kodeSupplier) {
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Supplier/hapus",
+            data: {
+                kodeSupplier: kodeSupplier
+            },
+            dataType: "JSON",
+            success: (res) => {
+                if (res.status == 200) {
+                    $("#modal-alert").modal("hide");
+                    notif('Data berhasil ddihapus');
+                    $("#tabelDataSupplier").DataTable().ajax.reload();
+                }
+            }
+        });
     }
 </script>
 

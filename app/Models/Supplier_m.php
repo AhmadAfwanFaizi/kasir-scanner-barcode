@@ -14,6 +14,7 @@ class Supplier_m extends Model
     {
         parent::__construct();
         $this->builder = $this->db->table("supplier");
+        $this->waktuSekarang = date("Y-m-d H:i:s");
     }
 
     private function _get_datatables_query($post = null)
@@ -73,7 +74,7 @@ class Supplier_m extends Model
             "kontak_supplier" => $post["kontakSupplier"],
             "alamat_supplier" => $post["alamatSupplier"],
         ];
-        $this->db->table("supplier")->insert($data);
+        $this->builder->insert($data);
     }
 
     public function ubah($post)
@@ -83,7 +84,12 @@ class Supplier_m extends Model
             "kontak_supplier" => $post["kontakSupplier"],
             "alamat_supplier" => $post["alamatSupplier"],
         ];
-        $this->db->table("supplier")->where(["kode_supplier" => $post["kodeSupplier"]])->update($data);
+        $this->builder->where(["kode_supplier" => $post["kodeSupplier"]])->update($data);
+    }
+
+    public function hapus($post)
+    {
+        $this->builder->where(["kode_supplier" => $post["kodeSupplier"]])->update(["dihapus" => $this->waktuSekarang]);
     }
 
     // =====================================================

@@ -50,7 +50,7 @@ class Supplier extends BaseController
                 $row[]    = $list->kontak_supplier;
                 $row[]    = $list->alamat_supplier;
                 $row[]    = '<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" onclick="formUbahDataSupplier(' . "'" . $list->kode_supplier . "'" . ')"><i class="far fa-edit"></i></button> ' .
-                    '<button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>';
+                    '<button type="button" class="btn btn-sm btn-danger" onclick="formHapusDataSupplier(' . "'" . $list->kode_supplier . "'" . ')"><i class="far fa-trash-alt"></i></button>';
                 $data[]   = $row;
             }
             $output = [
@@ -81,6 +81,19 @@ class Supplier extends BaseController
                 "status" => "200",
                 "data" => $this->getDataSupplier($post),
             ];
+            return json_encode($data);
+        }
+    }
+
+    public function hapus()
+    {
+        $post = $this->request->getPost();
+        $this->supplier_m->hapus($post);
+        if ($this->db->affectedRows()) {
+            $data = [
+                "status" => "200"
+            ];
+
             return json_encode($data);
         }
     }

@@ -141,6 +141,28 @@
             <!-- Main content -->
 
             <!-- /.content -->
+
+            <!-- alert -->
+            <div class="modal fade" id="modal-alert">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modalTitle"></h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="modalContent"></p>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-danger modalAlertButton">Hapus</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /alert -->
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
