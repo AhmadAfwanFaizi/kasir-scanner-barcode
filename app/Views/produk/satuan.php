@@ -7,11 +7,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-lg">Tambah</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="formTambahDataSatuan()">Tambah</button>
                     </div>
-                    <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="tabelSatuanProduk" class="table table-bordered table-striped">
+                        <table id="tabelDataSatuanProduk" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -20,67 +19,157 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>IE Mobile</td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button>
-                                        <button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
-                    <!-- /.card-body -->
                 </div>
-                <!-- /.card -->
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
     </div>
-    <!-- /.container-fluid -->
 
-    <div class="modal fade" id="modal-lg">
+    <div class="modal fade" id="modalFormSatuan">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah Data Satuan Produk</h4>
+                    <h4 class="modal-title" id="titleFormSatuan"></h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form role="form">
+                    <form role="form" id="formSatuan">
+                        <input type="hidden" name="idSatuan" id="idSatuan">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="satuanProduk">Satuan Produk</label>
-                                <input type="text" class="form-control" id="satuanProduk" placeholder="Satuan Produk" autofocus>
+                                <input type="text" class="form-control" name="satuanProduk" id="satuanProduk" placeholder="Satuan Produk" autofocus>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-primary" id="btn-simpan"></button>
                 </div>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
     </div>
 
 </section>
 
 <script>
     $(function() {
-        $("#tabelSatuanProduk").DataTable({
+        $("#tabelDataSatuanProduk").DataTable({
             "responsive": true,
             "autoWidth": false,
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: "<?= base_url() ?>/Produk/getDataTableSatuan",
+                type: "POST",
+            },
+            "columnDefs": [{
+                "targets": [0],
+                "orderable": false,
+            }]
         });
-
-
     });
+
+    function formTambahDataSatuan() {
+        $("#btn-simpan").removeAttr("onclick");
+        $("#titleFormSatuan").text("Tambah Data Satuan");
+        $("#btn-simpan").html("Tambah");
+        $("#btn-simpan").attr("onclick", "tambahDataSatuan()");
+        $("#formSatuan").trigger("reset");
+        $("#modalFormSatuan").modal("show");
+    }
+
+    function tambahDataSatuan() {
+        const data = $("#formSatuan").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Produk/tambahDataSatuan",
+            dataType: "JSON",
+            data: data,
+            success: (res) => {
+                if (res == 200) {
+                    notif('Data berhasil ditambahkan');
+                    $("#tabelDataSatuanProduk").DataTable().ajax.reload();
+                    $("#formSatuan").trigger("reset");
+                }
+            }
+        });
+    }
+
+    function formUbahDataSatuan(idSatuan) {
+        $("#btn-simpan").removeAttr("onclick");
+        $("#titleFormSatuan").text("Ubah Data Satuan");
+        $("#btn-simpan").html("Ubah");
+        $("#btn-simpan").attr("onclick", "ubahDataSatuan()");
+        $("#modalFormSatuan").modal("show");
+
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Produk/getDataSatuan",
+            dataType: "JSON",
+            data: {
+                idSatuan: idSatuan
+            },
+            success: (res) => {
+                console.log(res);
+                $("#idSatuan").val(res.id);
+                $("#satuanProduk").val(res.satuan);
+            }
+        });
+    }
+
+    function ubahDataSatuan() {
+        const data = $("#formSatuan").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Produk/ubahDataSatuan",
+            dataType: "JSON",
+            data: data,
+            success: (res) => {
+                if (res.status == 200) {
+                    notif('Data berhasil diubah');
+                    $("#satuanProduk").val(res.data.satuan);
+                    $("#tabelDataSatuanProduk").DataTable().ajax.reload();
+                }
+            }
+        })
+    }
+
+    function formHapusDataSatuan(idSatuan) {
+        $("#modalTitle").text("Hapus Data");
+        $("#modalContent").text("Apakah Anda Yakin?");
+        $(".modalAlertButton").removeAttr("id");
+        $("#modal-alert").modal("show");
+        $(".modalAlertButton").attr("id", "hapusDataSatuan");
+        $("#hapusDataSatuan").click(() => {
+            hapusDataSatuan(idSatuan)
+        });
+    }
+
+    function hapusDataSatuan(idSatuan) {
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Produk/hapusDataSatuan",
+            dataType: "JSON",
+            data: {
+                idSatuan: idSatuan
+            },
+            success: (res) => {
+                if (res.status == 200) {
+                    console.log(res);
+                    $("#modal-alert").modal("hide");
+                    notif('Data berhasil ddihapus');
+                    $("#tabelDataSatuanProduk").DataTable().ajax.reload();
+                }
+            }
+        });
+    }
 </script>
 
 <?= $this->endSection() ?>

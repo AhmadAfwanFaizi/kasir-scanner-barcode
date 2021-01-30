@@ -149,8 +149,8 @@
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>/Supplier/ubah",
-            data: data,
             dataType: "JSON",
+            data: data,
             success: (res) => {
                 if (res.status == 200) {
                     notif('Data berhasil diubah');
@@ -178,10 +178,10 @@
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>/Supplier/hapus",
+            dataType: "JSON",
             data: {
                 kodeSupplier: kodeSupplier
             },
-            dataType: "JSON",
             success: (res) => {
                 if (res.status == 200) {
                     $("#modal-alert").modal("hide");
