@@ -80,6 +80,8 @@
 <script>
     $(function() {
         $("#tabelDataSupplier").DataTable({
+            "responsive": true,
+            "autoWidth": false,
             "processing": true,
             "serverSide": true,
             "ajax": {
@@ -96,7 +98,7 @@
     function formTambahDataSupplier() {
         $("#btn-simpan").removeAttr("onclick");
         $("#titleFormSupplier").text("Tambah Data Supplier");
-        $("#btn-simpan").html("Simpan");
+        $("#btn-simpan").html("Tambah");
         $("#btn-simpan").attr("onclick", "tambahDataSupplier()");
         $("#formSupplier").trigger("reset");
         $("#modalFormSupplier").modal("show");

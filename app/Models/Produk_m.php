@@ -4,19 +4,18 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Supplier_m extends Model
+class Produk_m extends Model
 {
+
+    protected $column_order  = array("kode_produk", "nama_produk", "jenis_produk", "satuan_produk", "harga_produk");
+    protected $column_search = array("kode_produk", "nama_produk", "jenis_produk", "satuan_produk", "harga_produk");
+    protected $order         = array("nama_produk" => "asc");
 
     public function __construct()
     {
         parent::__construct();
-        $this->builder = $this->db->table("supplier");
-        $this->waktuSekarang = date("Y-m-d H:i:s");
+        $this->builder = $this->db->table("produk");
     }
-
-    protected $column_order  = array("kode_supplier", "nama_supplier", "kontak_supplier", "alamat_supplier");
-    protected $column_search = array("kode_supplier", "nama_supplier", "kontak_supplier", "alamat_supplier");
-    protected $order         = array("nama_supplier" => "asc");
 
     private function _getDataTablesQuery($post = null)
     {
@@ -62,36 +61,10 @@ class Supplier_m extends Model
         return $this->countAllResults();
     }
 
-    public function getDataSupplier($post)
+    public function getDataProduk($post)
     {
-        return $this->builder->getWhere(["kode_supplier" => $post["kodeSupplier"]])->getRow();
+        return $this->builder->getWhere(["kode_produk" => $post["kodeProduk"]])->getRow();
     }
 
-    public function tambah($post)
-    {
-        $data = [
-            "kode_supplier" => uniqid(),
-            "nama_supplier" => $post["namaSupplier"],
-            "kontak_supplier" => $post["kontakSupplier"],
-            "alamat_supplier" => $post["alamatSupplier"],
-        ];
-        $this->builder->insert($data);
-    }
-
-    public function ubah($post)
-    {
-        $data = [
-            "nama_supplier" => $post["namaSupplier"],
-            "kontak_supplier" => $post["kontakSupplier"],
-            "alamat_supplier" => $post["alamatSupplier"],
-        ];
-        $this->builder->where(["kode_supplier" => $post["kodeSupplier"]])->update($data);
-    }
-
-    public function hapus($post)
-    {
-        $this->builder->where(["kode_supplier" => $post["kodeSupplier"]])->update(["dihapus" => $this->waktuSekarang]);
-    }
-
-    // =====================================================
+    // ======================================================
 }

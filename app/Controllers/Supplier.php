@@ -9,7 +9,6 @@ class Supplier extends BaseController
 {
     public function __construct()
     {
-        $this->db = db_connect();
         $this->supplier_m = new Supplier_m();
         $this->coba = new coba();
     }
@@ -38,7 +37,7 @@ class Supplier extends BaseController
     {
         if ($this->request->getMethod(true) == 'POST') {
             $post = $this->request->getPost();
-            $lists = $this->supplier_m->get_datatables($post);
+            $lists = $this->supplier_m->getDataTables($post);
             $data = [];
             $no = $this->request->getPost("start");
             foreach ($lists as $list) {
@@ -55,11 +54,11 @@ class Supplier extends BaseController
             }
             $output = [
                 "draw"            => $this->request->getPost('draw'),
-                "recordsTotal"    => $this->supplier_m->count_all(),
-                "recordsFiltered" => $this->supplier_m->count_filtered(),
+                "recordsTotal"    => $this->supplier_m->countAll(),
+                "recordsFiltered" => $this->supplier_m->countFiltered(),
                 "data"            => $data
             ];
-            echo json_encode($output);
+            return json_encode($output);
         }
     }
 
@@ -88,7 +87,7 @@ class Supplier extends BaseController
     public function hapus()
     {
         $post = $this->request->getPost();
-        $this->supplier_m->hapus($post);
+        $c = $this->supplier_m->hapus($post);
         if ($this->db->affectedRows()) {
             $data = [
                 "status" => "200"

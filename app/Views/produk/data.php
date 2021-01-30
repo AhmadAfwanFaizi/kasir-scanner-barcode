@@ -14,64 +14,18 @@
                         <table id="tabelDataProduk" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Kode Produk</th>
                                     <th>Nama Produk</th>
-                                    <th>Platform(s)</th>
                                     <th>Jenis Produk</th>
                                     <th>Satuan Produk</th>
-                                    <th>Supplier</th>
+                                    <th>Harga Produk</th>
                                     <th>Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Misc</td>
-                                    <td>IE Mobile</td>
-                                    <td>Windows Mobile 6</td>
-                                    <td>-</td>
-                                    <td>C</td>
-                                    <td>C</td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button>
-                                        <button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Misc</td>
-                                    <td>PSP browser</td>
-                                    <td>PSP</td>
-                                    <td>-</td>
-                                    <td>C</td>
-                                    <td>C</td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button>
-                                        <button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Other browsers</td>
-                                    <td>All others</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>U</td>
-                                    <td>C</td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button>
-                                        <button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
+
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Kode Produk</th>
-                                    <th>Nama Produk</th>
-                                    <th>Platform(s)</th>
-                                    <th>Jenis Produk</th>
-                                    <th>Satuan Produk</th>
-                                    <th>Supplier</th>
-                                    <th>Opsi</th>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                     <!-- /.card-body -->
@@ -116,6 +70,10 @@
                                     <option value="">Pilih</option>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label for="hargaProduk">Harga Produk</label>
+                                <input type="text" class="form-control" id="hargaProduk" placeholder="Harga Produk">
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -136,9 +94,17 @@
         $("#tabelDataProduk").DataTable({
             "responsive": true,
             "autoWidth": false,
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: "<?= base_url() ?>/Produk/getDataTableProduk",
+                type: "POST",
+            },
+            "columnDefs": [{
+                "targets": [0],
+                "orderable": false,
+            }]
         });
-
-
     });
 </script>
 
