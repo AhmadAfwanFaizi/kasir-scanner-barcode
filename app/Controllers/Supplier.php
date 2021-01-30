@@ -24,12 +24,14 @@ class Supplier extends BaseController
         return view('supplier/data', $data);
     }
 
-    public function coba()
+    public function getDataSupplier($param = null)
     {
-        if ($this->request->getMethod(true) == 'POST') {
-            $c = $this->coba->output();
-            var_dump($c);
-        }
+        if ($param) $post = $param;
+        else $post = $this->request->getPost();
+
+        $data = $this->supplier_m->getDataSupplier($post);
+        if ($param) return $data;
+        else return json_encode($data);
     }
 
     public function dataTableSupplier()
@@ -47,7 +49,7 @@ class Supplier extends BaseController
                 $row[]    = $list->nama_supplier;
                 $row[]    = $list->kontak_supplier;
                 $row[]    = $list->alamat_supplier;
-                $row[]    = '<button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button> ' .
+                $row[]    = '<button type="button" class="btn btn-sm btn-warning" data-toggle="modal" onclick="formUbahDataSupplier(' . "'" . $list->kode_supplier . "'" . ')"><i class="far fa-edit"></i></button> ' .
                     '<button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>';
                 $data[]   = $row;
             }
@@ -67,6 +69,19 @@ class Supplier extends BaseController
         $this->supplier_m->tambah($post);
         if ($this->db->affectedRows()) {
             return "200";
+        }
+    }
+
+    public function ubah()
+    {
+        $post = $this->request->getPost();
+        $this->supplier_m->ubah($post);
+        if ($this->db->affectedRows()) {
+            $data = [
+                "status" => "200",
+                "data" => $this->getDataSupplier($post),
+            ];
+            return json_encode($data);
         }
     }
 

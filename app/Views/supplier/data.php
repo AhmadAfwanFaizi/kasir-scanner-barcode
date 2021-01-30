@@ -7,7 +7,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-lg">Tambah</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="formTambahDataSupplier()">Tambah</button>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -37,17 +37,18 @@
     </div>
     <!-- /.container-fluid -->
 
-    <div class="modal fade" id="modal-lg">
+    <div class="modal fade" id="modalFormSupplier">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah Data Supplier</h4>
+                    <h4 class="modal-title" id="titleFormSupplier"></h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form role="form" id="formTambahSupplier">
+                    <form role="form" id="formSupplier">
+                        <input type="hidden" name="kodeSupplier" id="kodeSupplier">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="namaSupplier">Nama Supplier</label>
@@ -66,12 +67,10 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary" onclick="tambahDataSupplier()">Simpan</button>
+                    <button type="button" class="btn btn-primary" id="btn-simpan"></button>
                 </div>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
     </div>
 
 </section>
@@ -92,21 +91,73 @@
         });
     });
 
+    function formTambahDataSupplier() {
+        $("#btn-simpan").removeAttr("onclick");
+        $("#titleFormSupplier").text("Tambah Data Supplier");
+        $("#btn-simpan").html("Simpan");
+        $("#btn-simpan").attr("onclick", "tambahDataSupplier()");
+        $("#formSupplier").trigger("reset");
+        $("#modalFormSupplier").modal("show");
+    }
+
     function tambahDataSupplier() {
-        const data = $("#formTambahSupplier").serialize();
+        const data = $("#formSupplier").serialize();
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>/Supplier/tambah",
+            dataType: "JSON",
             data: data,
             success: (res) => {
-                console.log(res);
                 if (res == 200) {
                     notif('Data berhasil ditambahkan');
                     $("#tabelDataSupplier").DataTable().ajax.reload();
+                    $("#formSupplier").trigger("reset");
                 }
             }
         });
     }
+
+    function formUbahDataSupplier(kodeSupplier) {
+        $("#btn-simpan").removeAttr("onclick");
+        $("#titleFormSupplier").text("Ubah Data Supplier");
+        $("#btn-simpan").html("Ubah");
+        $("#btn-simpan").attr("onclick", "ubahDataSupplier()");
+        $("#modalFormSupplier").modal("show");
+
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Supplier/getDataSupplier",
+            dataType: "JSON",
+            data: {
+                kodeSupplier: kodeSupplier
+            },
+            success: (res) => {
+                $("#kodeSupplier").val(res.kode_supplier);
+                $("#namaSupplier").val(res.nama_supplier);
+                $("#kontakSupplier").val(res.kontak_supplier);
+                $("#alamatSupplier").val(res.alamat_supplier);
+            }
+        });
+    }
+
+    function ubahDataSupplier() {
+        const data = $("#formSupplier").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Supplier/ubah",
+            data: data,
+            dataType: "JSON",
+            success: (res) => {
+                if (res.status == 200) {
+                    notif('Data berhasil diubah');
+                    $("#namaSupplier").val(res.data.nama_supplier);
+                    $("#kontakSupplier").val(res.data.kontak_supplier);
+                    $("#alamatSupplier").val(res.data.alamat_supplier);
+                    $("#tabelDataSupplier").DataTable().ajax.reload();
+                }
+            }
+        })
+    }
 </script>
 
-<?= $this->endSection() ?>`
+<?= $this->endSection() ?>

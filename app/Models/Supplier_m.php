@@ -6,9 +6,9 @@ use CodeIgniter\Model;
 
 class Supplier_m extends Model
 {
-    protected $column_order  = array('kode_supplier', 'nama_supplier', 'kontak_supplier', 'alamat_supplier');
-    protected $column_search = array('kode_supplier', 'nama_supplier', 'kontak_supplier', 'alamat_supplier');
-    protected $order         = array('nama_supplier' => 'asc');
+    protected $column_order  = array("kode_supplier", "nama_supplier", "kontak_supplier", "alamat_supplier");
+    protected $column_search = array("kode_supplier", "nama_supplier", "kontak_supplier", "alamat_supplier");
+    protected $order         = array("nama_supplier" => "asc");
 
     public function __construct()
     {
@@ -20,20 +20,20 @@ class Supplier_m extends Model
     {
         $i = 0;
         foreach ($this->column_search as $item) {
-            if (isset($post['search']['value'])) {
+            if (isset($post["search"]["value"])) {
                 if ($i === 0) {
                     $this->builder->groupStart();
-                    $this->builder->like($item, $post['search']['value']);
+                    $this->builder->like($item, $post["search"]["value"]);
                 } else {
-                    $this->builder->orLike($item, $post['search']['value']);
+                    $this->builder->orLike($item, $post["search"]["value"]);
                 }
                 if (count($this->column_search) - 1 == $i)
                     $this->builder->groupEnd();
             }
             $i++;
         }
-        if (isset($post['order'])) {
-            $this->builder->orderBy($this->column_order[$post['order']['0']['column']], $post['order']['0']['dir']);
+        if (isset($post["order"])) {
+            $this->builder->orderBy($this->column_order[$post["order"]["0"]["column"]], $post["order"]["0"]["dir"]);
         } else if (isset($this->order)) {
             $order = $this->order;
             $this->builder->orderBy(key($order), $order[key($order)]);
@@ -42,8 +42,8 @@ class Supplier_m extends Model
     function get_datatables($post)
     {
         $this->_get_datatables_query($post);
-        if ($post['length'] != -1)
-            $this->builder->limit($post['length'], $post['start']);
+        if ($post["length"] != -1)
+            $this->builder->limit($post["length"], $post["start"]);
         $this->builder->where("dihapus", NULL);
         $query = $this->builder->get();
         return $query->getResult();
@@ -60,15 +60,31 @@ class Supplier_m extends Model
         return $this->countAllResults();
     }
 
+    public function getDataSupplier($post)
+    {
+        return $this->builder->getWhere(["kode_supplier" => $post["kodeSupplier"]])->getRow();
+    }
+
     public function tambah($post)
     {
         $data = [
-            "id_user" => 1,
             "kode_supplier" => uniqid(),
-            "nama_supplier" => $post['namaSupplier'],
-            "kontak_supplier" => $post['kontakSupplier'],
-            "alamat_supplier" => $post['alamatSupplier'],
+            "nama_supplier" => $post["namaSupplier"],
+            "kontak_supplier" => $post["kontakSupplier"],
+            "alamat_supplier" => $post["alamatSupplier"],
         ];
         $this->db->table("supplier")->insert($data);
     }
+
+    public function ubah($post)
+    {
+        $data = [
+            "nama_supplier" => $post["namaSupplier"],
+            "kontak_supplier" => $post["kontakSupplier"],
+            "alamat_supplier" => $post["alamatSupplier"],
+        ];
+        $this->db->table("supplier")->where(["kode_supplier" => $post["kodeSupplier"]])->update($data);
+    }
+
+    // =====================================================
 }
