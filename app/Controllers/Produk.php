@@ -26,6 +26,26 @@ class Produk extends BaseController
         return view('produk/data', $data);
     }
 
+    public function getDataProduk($param = null)
+    {
+        if ($param) $post = $param;
+        else $post = $this->request->getPost();
+
+        $data = $this->produk_m->getDataProduk($post);
+        if ($param) return $data;
+        else return json_encode($data);
+    }
+
+    public function selectInputProduk()
+    {
+        $data = [
+            "status"   => "200",
+            "kategori" => json_decode($this->getDataKategori()),
+            "satuan"   => json_decode($this->getDataSatuan()),
+        ];
+        return json_encode($data);
+    }
+
     public function getDataTableProduk()
     {
         if ($this->request->getMethod(true) == "POST") {
@@ -39,7 +59,7 @@ class Produk extends BaseController
                 $row[] = $no;
                 $row[] = $list->kode_produk;
                 $row[] = $list->nama_produk;
-                $row[] = $list->jenis_produk;
+                $row[] = $list->kategori_produk;
                 $row[] = $list->satuan_produk;
                 $row[] = "Rp. " . $list->harga_produk;
                 $row[] = '<button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button> ' .
@@ -129,8 +149,6 @@ class Produk extends BaseController
     public function hapusDataKategori()
     {
         $post = $this->request->getPost();
-        var_dump($post);
-        die;
         $this->kategori_m->hapus($post);
         if ($this->db->affectedRows()) {
             $data = [

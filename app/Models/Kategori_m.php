@@ -62,9 +62,10 @@ class Kategori_m extends Model
         return $this->countAllResults();
     }
 
-    public function getDataKategori($post)
+    public function getDataKategori($post = null)
     {
-        return $this->builder->getWhere(["id" => $post["idKategori"]])->getRow();
+        if ($post) return $this->builder->getWhere(["id" => $post["idKategori"]]);
+        else return $this->builder->get()->getResult();
     }
 
     public function tambah($post)

@@ -62,9 +62,10 @@ class Satuan_m extends Model
         return $this->countAllResults();
     }
 
-    public function getDatasatuan($post)
+    public function getDatasatuan($post = null)
     {
-        return $this->builder->getWhere(["id" => $post["idSatuan"]])->getRow();
+        if ($post) return $this->builder->getWhere(["id" => $post["idSatuan"]])->getRow();
+        else return $this->builder->get()->getResult();
     }
 
     public function tambah($post)

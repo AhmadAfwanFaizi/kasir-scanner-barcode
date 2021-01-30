@@ -7,8 +7,8 @@ use CodeIgniter\Model;
 class Produk_m extends Model
 {
 
-    protected $column_order  = array("kode_produk", "nama_produk", "jenis_produk", "satuan_produk", "harga_produk");
-    protected $column_search = array("kode_produk", "nama_produk", "jenis_produk", "satuan_produk", "harga_produk");
+    protected $column_order  = array("kode_produk", "nama_produk", "kategori_produk", "satuan_produk", "harga_produk");
+    protected $column_search = array("kode_produk", "nama_produk", "kategori_produk", "satuan_produk", "harga_produk");
     protected $order         = array("nama_produk" => "asc");
 
     public function __construct()
