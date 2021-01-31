@@ -11,7 +11,7 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="tabelDataProdukProduk" class="table table-bordered table-striped">
+                        <table id="tabelDataProduk" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -48,7 +48,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form role="form" name="formProduk">
+                    <form role="form" id="formProduk">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="kodeProduk">Kode Produk</label>
@@ -89,7 +89,7 @@
 
 <script>
     $(function() {
-        $("#tabelDataProdukProduk").DataTable({
+        $("#tabelDataProduk").DataTable({
             "responsive": true,
             "autoWidth": false,
             "processing": true,
@@ -113,28 +113,36 @@
         $("#formProduk").trigger("reset");
         $("#modalFormProduk").modal("show");
 
+        selectProduk();
+    }
+
+    function selectProduk(paramKat = null, paramSat = null) {
+        console.log(paramKat, paramSat);
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>/Produk/selectInputProduk",
             dataType: "JSON",
             success: (res) => {
                 if (res.status == 200) {
-                    let optKat, iKat, optSat, iSat;
-                    for (iKat = 0; iKat < res.kategori.length; iKat++) {
-                        optKat += '<option value="" hidden>Pilih</option>';
-                        optKat += '<option value="' + res.kategori[iKat].id + '">' + res.kategori[iKat].kategori + '</option>';
-                    }
+                    let optionKat, indexKat, idKat, selectKat, optionSat, indexSat, idSat, selectSat;
+                    optionKat = '<option value="" hidden>Pilih</option>';
+                    optionSat = '<option value="" hidden>Pilih</option>';
 
-                    for (iSat = 0; iSat < res.satuan.length; iSat++) {
-                        optSat += '<option value="" hidden>Pilih</option>';
-                        optSat += '<option value="' + res.satuan[iSat].id + '">' + res.satuan[iSat].satuan + '</option>';
+                    for (indexKat = 0; indexKat < res.kategori.length; indexKat++) {
+                        idKat = res.kategori[indexKat].id;
+                        selectKat = idKat == paramKat ? 'selected' : "";
+                        optionKat += '<option value="' + idKat + '" ' + selectKat + '>' + res.kategori[indexKat].kategori + '</option>';
                     }
-                    $("#kategoriProduk").html(optKat);
-                    $("#satuanProduk").html(optSat);
+                    for (indexSat = 0; indexSat < res.satuan.length; indexSat++) {
+                        idSat = res.satuan[indexSat].id;
+                        selectSat = idSat == paramSat ? 'selected' : "";
+                        optionSat += '<option value="' + idSat + '"' + selectSat + '>' + res.satuan[indexSat].satuan + '</option>';
+                    }
+                    $("#kategoriProduk").html(optionKat);
+                    $("#satuanProduk").html(optionSat);
                 }
             }
         });
-
     }
 
     function tambahDataProduk() {
@@ -147,8 +155,77 @@
             success: (res) => {
                 if (res == 200) {
                     notif('Data berhasil ditambahkan');
-                    $("#tabelDataProdukProduk").DataTable().ajax.reload();
+                    $("#tabelDataProduk").DataTable().ajax.reload();
                     $("#formProduk").trigger("reset");
+                }
+            }
+        });
+    }
+
+    function formUbahDataProduk(kodeProduk) {
+        $("#btn-simpan").removeAttr("onclick");
+        $("#titleFormProduk").text("Ubah Data Produk");
+        $("#btn-simpan").html("Ubah");
+        $("#btn-simpan").attr("onclick", "ubahDataProduk()");
+        $("#modalFormProduk").modal("show");
+
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Produk/getDataProduk",
+            dataType: "JSON",
+            data: {
+                kodeProduk: kodeProduk
+            },
+            success: (res) => {
+                $("#kodeProduk").val(res.kode_produk);
+                $("#namaProduk").val(res.nama_produk);
+                selectProduk(res.id_kategori, res.id_satuan);
+                $("#hargaProduk").val(res.harga_produk);
+            }
+        });
+    }
+
+    function ubahDataProduk() {
+        const data = $("#formProduk").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Produk/ubahDataProduk",
+            dataType: "JSON",
+            data: data,
+            success: (res) => {
+                if (res.status == 200) {
+                    notif('Data berhasil diubah');
+                    $("#ProdukProduk").val(res.data.Produk);
+                    $("#tabelDataProduk").DataTable().ajax.reload();
+                }
+            }
+        })
+    }
+
+    function formHapusDataProduk(kodeProduk) {
+        $("#modalTitle").text("Hapus Data");
+        $("#modalContent").text("Apakah Anda Yakin?");
+        $(".modalAlertButton").removeAttr("id");
+        $("#modal-alert").modal("show");
+        $(".modalAlertButton").attr("id", "hapusDataProduk");
+        $("#hapusDataProduk").click(() => {
+            hapusDataProduk(kodeProduk)
+        });
+    }
+
+    function hapusDataProduk(kodeProduk) {
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Produk/hapusDataProduk",
+            dataType: "JSON",
+            data: {
+                kodeProduk: kodeProduk
+            },
+            success: (res) => {
+                if (res.status == 200) {
+                    $("#modal-alert").modal("hide");
+                    notif('Data berhasil ddihapus');
+                    $("#tabelDataProduk").DataTable().ajax.reload();
                 }
             }
         });

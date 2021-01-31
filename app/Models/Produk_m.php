@@ -7,14 +7,15 @@ use CodeIgniter\Model;
 class Produk_m extends Model
 {
 
-    protected $column_order  = array("kode_produk", "nama_produk", "kategori_produk", "satuan_produk", "harga_produk");
-    protected $column_search = array("kode_produk", "nama_produk", "kategori_produk", "satuan_produk", "harga_produk");
+    protected $column_order  = array("kode_produk", "nama_produk", "kategori", "satuan", "harga_produk");
+    protected $column_search = array("kode_produk", "nama_produk", "kategori", "satuan", "harga_produk");
     protected $order         = array("nama_produk" => "asc");
 
     public function __construct()
     {
         parent::__construct();
-        $this->builder = $this->db->table("produk");
+        $this->builder = $this->db->table("produk P");
+        // ->select("P.kode_produk, P.nama_produk, K.kategori, S.satuan, P.harga_produk");
     }
 
     private function _getDataTablesQuery($post = null)
@@ -45,25 +46,60 @@ class Produk_m extends Model
         $this->_getDataTablesQuery($post);
         if ($post["length"] != -1)
             $this->builder->limit($post["length"], $post["start"]);
-        $this->builder->where("dihapus", NULL);
+        $this->builder->join("kategori K", "K.id = P.id_kategori");
+        $this->builder->join("satuan S", "S.id = P.id_satuan");
+        $this->builder->where("P.dihapus", NULL);
         $query = $this->builder->get();
         return $query->getResult();
     }
     function countFiltered()
     {
         $this->_getDataTablesQuery();
-        $this->builder->where("dihapus", NULL);
+        $this->builder->join("kategori K", "K.id = P.id_kategori");
+        $this->builder->join("satuan S", "S.id = P.id_satuan");
+        $this->builder->where("P.dihapus", NULL);
         return $this->builder->countAllResults();
     }
     public function countAll()
     {
-        $this->builder->where("dihapus", NULL);
+        $this->builder->join("kategori K", "K.id = P.id_kategori");
+        $this->builder->join("satuan S", "S.id = P.id_satuan");
+        $this->builder->where("P.dihapus", NULL);
         return $this->countAllResults();
     }
 
     public function getDataProduk($post)
     {
-        return $this->builder->getWhere(["kode_produk" => $post["kodeProduk"]])->getRow();
+        if ($post) return $this->builder->getWhere(["kode_produk" => $post["kodeProduk"]])->getRow();
+        else return $this->builder->get()->getResult();
+
+        // return $this->builder->getWhere(["kode_produk" => $post["kodeProduk"]])->getRow();
+    }
+
+    public function tambah($post)
+    {
+        $data = [
+            "id_user"       => 1,
+            "kode_produk"   => $post["kodeProduk"],
+            "id_kategori" => $post["kategoriProduk"],
+            "id_satuan"   => $post["satuanProduk"],
+            "nama_produk"   => $post["namaProduk"],
+            "harga_produk"  => $post["hargaProduk"],
+        ];
+        $this->builder->insert($data);
+    }
+
+    public function ubah($post)
+    {
+        $data = [
+            "satuan" => $post["satuanProduk"],
+        ];
+        $this->builder->where(["id" => $post["idSatuan"]])->update($data);
+    }
+
+    public function hapus($post)
+    {
+        $this->builder->where(["id" => $post["idSatuan"]])->update(["dihapus" => $this->waktuSekarang]);
     }
 
     // ======================================================

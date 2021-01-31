@@ -59,11 +59,11 @@ class Produk extends BaseController
                 $row[] = $no;
                 $row[] = $list->kode_produk;
                 $row[] = $list->nama_produk;
-                $row[] = $list->kategori_produk;
-                $row[] = $list->satuan_produk;
+                $row[] = $list->kategori;
+                $row[] = $list->satuan;
                 $row[] = "Rp. " . $list->harga_produk;
-                $row[] = '<button type="button" class="btn btn-sm btn-warning"><i class="far fa-edit"></i></button> ' .
-                    '<button type="button" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></button>';
+                $row[] = '<button type="button" class="btn btn-sm btn-warning" onclick="formUbahDataProduk(' . "'" . $list->kode_produk . "'" . ')"><i class="far fa-edit"></i></button> ' .
+                    '<button type="button" class="btn btn-sm btn-danger" onclick="formHapusDataProduk(' . "'" . $list->kode_produk . "'" . ')"><i class="far fa-trash-alt"></i></button>';
 
                 $data[] = $row;
             }
@@ -74,6 +74,43 @@ class Produk extends BaseController
                 "data"            => $data,
             ];
             return json_encode($output);
+        }
+    }
+
+    public function tambahDataProduk()
+    {
+        $post = $this->request->getPost();
+        var_dump($post);
+        die;
+        $this->produk_m->tambah($post);
+        if ($this->db->affectedRows()) {
+            return "200";
+        }
+    }
+
+    public function ubahDataProduk()
+    {
+        $post = $this->request->getPost();
+        $this->produk_m->ubah($post);
+        if ($this->db->affectedRows()) {
+            $data = [
+                "status" => "200",
+                "data" => $this->getDataProduk($post),
+            ];
+            return json_encode($data);
+        }
+    }
+
+    public function hapusDataProduk()
+    {
+        $post = $this->request->getPost();
+        $this->produk_m->hapus($post);
+        if ($this->db->affectedRows()) {
+            $data = [
+                "status" => "200"
+            ];
+
+            return json_encode($data);
         }
     }
 
