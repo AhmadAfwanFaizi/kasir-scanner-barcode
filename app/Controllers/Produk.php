@@ -80,8 +80,6 @@ class Produk extends BaseController
     public function tambahDataProduk()
     {
         $post = $this->request->getPost();
-        var_dump($post);
-        die;
         $this->produk_m->tambah($post);
         if ($this->db->affectedRows()) {
             return "200";

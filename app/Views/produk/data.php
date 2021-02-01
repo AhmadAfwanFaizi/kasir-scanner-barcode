@@ -52,7 +52,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="kodeProduk">Kode Produk</label>
-                                <input type="text" class="form-control" name="kodeProduk" id="kodeProduk" placeholder="Kode Produk" autofocus>
+                                <input type="text" class="form-control" name="kodeProduk" id="kodeProduk" placeholder="Kode Produk">
                             </div>
                             <div class="form-group">
                                 <label for="namaProduk">Nama Produk</label>
@@ -106,6 +106,7 @@
     });
 
     function formTambahDataProduk() {
+        $("#kodeProduk").removeAttr("readonly");
         $("#btn-simpan").removeAttr("onclick");
         $("#titleFormProduk").text("Tambah Data Produk");
         $("#btn-simpan").html("Tambah");
@@ -163,6 +164,7 @@
     }
 
     function formUbahDataProduk(kodeProduk) {
+        $("#kodeProduk").attr("readonly", true);
         $("#btn-simpan").removeAttr("onclick");
         $("#titleFormProduk").text("Ubah Data Produk");
         $("#btn-simpan").html("Ubah");
