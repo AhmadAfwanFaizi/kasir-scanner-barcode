@@ -17,9 +17,10 @@
                                     <th>#</th>
                                     <th>Kode Produk</th>
                                     <th>Nama Produk</th>
-                                    <th>kategori Produk</th>
-                                    <th>Satuan Produk</th>
-                                    <th>Harga Produk</th>
+                                    <th>kategori</th>
+                                    <th>Satuan</th>
+                                    <th>Harga</th>
+                                    <th>Stok</th>
                                     <th>Opsi</th>
                                 </tr>
                             </thead>

@@ -59,7 +59,7 @@ class Supplier_m extends Model
     public function countAll()
     {
         $this->builder->where("dihapus", NULL);
-        return $this->countAllResults();
+        return $this->builder->countAllResults();
     }
 
     public function getDataSupplier($post)

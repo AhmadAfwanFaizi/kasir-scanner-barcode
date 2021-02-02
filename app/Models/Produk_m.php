@@ -7,9 +7,10 @@ use CodeIgniter\Model;
 class Produk_m extends Model
 {
 
-    protected $column_order  = array("kode_produk", "nama_produk", "kategori", "satuan", "harga_produk");
-    protected $column_search = array("kode_produk", "nama_produk", "kategori", "satuan", "harga_produk");
+    protected $column_order  = array("kode_produk", "nama_produk", "kategori", "satuan", "harga_produk", "stok_produk");
+    protected $column_search = array("kode_produk", "nama_produk", "kategori", "satuan", "harga_produk", "stok_produk");
     protected $order         = array("nama_produk" => "asc");
+
 
     public function __construct()
     {
@@ -52,7 +53,7 @@ class Produk_m extends Model
         if ($post["length"] != -1)
             $this->dataTable->limit($post["length"], $post["start"]);
         $this->join;
-        $this->where;
+        $this->dataTable->where("P.dihapus", NULL);
         $query = $this->dataTable->get();
         return $query->getResult();
     }
@@ -60,13 +61,13 @@ class Produk_m extends Model
     {
         $this->_getDataTablesQuery();
         $this->join;
-        $this->where;
+        $this->dataTable->where("P.dihapus", NULL);
         return $this->dataTable->countAllResults();
     }
     public function countAll()
     {
         $this->join;
-        $this->where;
+        $this->dataTable->where("P.dihapus", NULL);
         return $this->countAllResults();
     }
 

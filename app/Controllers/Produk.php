@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Libraries\coba;
+
 use App\Models\Produk_m;
 use App\Models\Kategori_m;
 use App\Models\Satuan_m;
@@ -14,8 +16,9 @@ class Produk extends BaseController
         $this->produk_m   = new Produk_m();
         $this->kategori_m = new Kategori_m();
         $this->satuan_m   = new Satuan_m();
-    }
 
+        $this->coba  = new coba();
+    }
     // PRODUK ==================================================
 
     public function data()
@@ -62,6 +65,7 @@ class Produk extends BaseController
                 $row[] = $list->kategori;
                 $row[] = $list->satuan;
                 $row[] = "Rp. " . $list->harga_produk;
+                $row[] = $list->stok_produk;
                 $row[] = '<button type="button" class="btn btn-sm btn-warning" onclick="formUbahDataProduk(' . "'" . $list->kode_produk . "'" . ')"><i class="far fa-edit"></i></button> ' .
                     '<button type="button" class="btn btn-sm btn-danger" onclick="formHapusDataProduk(' . "'" . $list->kode_produk . "'" . ')"><i class="far fa-trash-alt"></i></button>';
 
@@ -134,29 +138,36 @@ class Produk extends BaseController
 
     public function getDataTableKategori()
     {
-        if ($this->request->getMethod(true) == "POST") {
-            $post = $this->request->getPost();
-            $list = $this->kategori_m->getDataTables($post);
-            $data = [];
-            $no = $this->request->getPost("start");
-            foreach ($list as $list) {
-                $no++;
-                $row = [];
-                $row[] = $no;
-                $row[] = $list->kategori;
-                $row[] = '<button type="button" class="btn btn-sm btn-warning" onclick="formUbahDataKategori(' . "'" . $list->id . "'" . ')"><i class="far fa-edit"></i></button> ' .
-                    '<button type="button" class="btn btn-sm btn-danger" onclick="formHapusDataKategori(' . "'" . $list->id . "'" . ')"><i class="far fa-trash-alt"></i></button>';
+        $this->coba->table("kategori");
+        $this->coba->columnOrder(["kategori"]);
+        $this->coba->columnSearch(["kategori"]);
+        $this->coba->order(["kategori" => "asc"]);
 
-                $data[] = $row;
-            }
-            $output = [
-                "draw"            => $this->request->getPost("draw"),
-                "recordsTotal"    => $this->kategori_m->countAll(),
-                "recordsFiltered" => $this->kategori_m->countFiltered(),
-                "data"            => $data,
-            ];
-            return json_encode($output);
+        $this->coba->where(["dihapus" => NULL]);
+
+        // if ($this->request->getMethod(true) == "POST") {
+        $post = $this->request->getPost();
+        $list = $this->coba->getDataTables($post);
+        $data = [];
+        $no = $this->request->getPost("start");
+        foreach ($list as $list) {
+            $no++;
+            $row = [];
+            $row[] = $no;
+            $row[] = $list->kategori;
+            $row[] = '<button type="button" class="btn btn-sm btn-warning" onclick="formUbahDataKategori(' . "'" . $list->id . "'" . ')"><i class="far fa-edit"></i></button> ' .
+                '<button type="button" class="btn btn-sm btn-danger" onclick="formHapusDataKategori(' . "'" . $list->id . "'" . ')"><i class="far fa-trash-alt"></i></button>';
+
+            $data[] = $row;
         }
+        $output = [
+            "draw"            => $this->request->getPost("draw"),
+            "recordsTotal"    => $this->coba->countAll(),
+            "recordsFiltered" => $this->coba->countFiltered(),
+            "data"            => $data,
+        ];
+        return json_encode($output);
+        // }
     }
 
     public function tambahDataKategori()

@@ -59,7 +59,7 @@ class Kategori_m extends Model
     public function countAll()
     {
         $this->builder->where("dihapus", NULL);
-        return $this->countAllResults();
+        return $this->builder->countAllResults();
     }
 
     public function getDataKategori($post = null)
