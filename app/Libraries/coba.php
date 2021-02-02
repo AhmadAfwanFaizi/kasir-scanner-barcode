@@ -4,70 +4,105 @@ namespace App\Libraries;
 
 class coba
 {
-
-    protected $column_order  = array('kode_supplier', 'nama_supplier', 'kontak_supplier', 'alamat_supplier');
-    protected $column_search = array('kode_supplier', 'nama_supplier', 'kontak_supplier', 'alamat_supplier');
-    protected $order         = array('nama_supplier' => 'asc');
     protected $db;
+    protected $builder;
+    protected $columnOrder;
+    protected $columnSearch;
+    protected $order;
+
+    protected $where;
 
     public function __construct()
     {
         $this->db = db_connect();
-        $this->builder = $this->db->table("supplier");
+        $this->waktuSekarang = date("Y-m-d H:i:s");
     }
 
-    public function tableName($table = null)
+    function table($table = null)
     {
-        return $table;
+        $this->builder = $this->db->table($table);
+        return $this;
     }
 
-    private function _get_datatables_query($post = null)
+
+    function columnOrder($columnOrder = null)
     {
+        $this->columnOrder = $columnOrder;
+        return $this;
+    }
+
+    function columnSearch($columnSearch = null)
+    {
+        $this->columnSearch = $columnSearch;
+        return $this;
+    }
+
+    function order($order = null)
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    function join($join = null)
+    {
+    }
+
+    function where($where = null)
+    {
+        // $this->where = $this->builder->where($where);
+        $this->where = $where;
+        return $this;
+    }
+
+    private function _getDataTablesQuery($post = null)
+    {
+        // var_dump($this->columnOrder);
+        // die;
         $i = 0;
-        foreach ($this->column_search as $item) {
-            if (isset($post['search']['value'])) {
+        foreach ($this->columnSearch as $item) {
+            if (isset($post["search"]["value"])) {
                 if ($i === 0) {
                     $this->builder->groupStart();
-                    $this->builder->like($item, $post['search']['value']);
+                    $this->builder->like($item, $post["search"]["value"]);
                 } else {
-                    $this->builder->orLike($item, $post['search']['value']);
+                    $this->builder->orLike($item, $post["search"]["value"]);
                 }
-                if (count($this->column_search) - 1 == $i)
+                if (count($this->columnSearch) - 1 == $i)
                     $this->builder->groupEnd();
             }
             $i++;
         }
-        if (isset($post['order'])) {
-            $this->builder->orderBy($this->column_order[$post['order']['0']['column']], $post['order']['0']['dir']);
+        if (isset($post["order"])) {
+            $this->builder->orderBy($this->columnOrder[$post["order"]["0"]["column"]], $post["order"]["0"]["dir"]);
         } else if (isset($this->order)) {
             $order = $this->order;
             $this->builder->orderBy(key($order), $order[key($order)]);
         }
     }
-    function get_datatables($post)
+    function getDataTables($post)
     {
-        $this->_get_datatables_query($post);
-        if ($post['length'] != -1)
-            $this->builder->limit($post['length'], $post['start']);
-        $this->builder->where("dihapus", NULL);
+        $this->_getDataTablesQuery($post);
+        if ($post["length"] != -1)
+            $this->builder->limit($post["length"], $post["start"]);
+        $this->builder->where($this->where);
         $query = $this->builder->get();
         return $query->getResult();
     }
-    function count_filtered()
+    function countFiltered()
     {
-        $this->_get_datatables_query();
-        $this->builder->where("dihapus", NULL);
+        $this->_getDataTablesQuery();
+        $this->builder->where($this->where);
         return $this->builder->countAllResults();
     }
-    public function count_all()
+    public function countAll()
     {
-        $this->builder->where("dihapus", NULL);
+        $this->builder->where($this->where);
         return $this->builder->countAllResults();
     }
 
     public function output($post)
     {
-        $lists = $this->get_datatables($post);
+        $lists = $this->getDataTables($post);
         $data = [];
         $no = $post["start"];
         foreach ($lists as $list) {
@@ -84,8 +119,8 @@ class coba
         }
         $output = [
             "draw"            => $post['draw'],
-            "recordsTotal"    => $this->count_all(),
-            "recordsFiltered" => $this->count_filtered(),
+            "recordsTotal"    => $this->countAll(),
+            "recordsFiltered" => $this->countFiltered(),
             "data"            => $data
         ];
         echo json_encode($output);
