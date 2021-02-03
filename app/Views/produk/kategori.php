@@ -71,10 +71,11 @@
                 type: "POST",
             },
             "columnDefs": [{
-                "targets": [0, 1, 2],
+                "targets": [0, 2],
                 "orderable": false,
-            }]
+            }],
         });
+
     });
 
     function formTambahDataKategori() {
@@ -118,6 +119,7 @@
                 idKategori: idKategori
             },
             success: (res) => {
+                console.log(res);
                 $("#idKategori").val(res.id);
                 $("#kategoriProduk").val(res.kategori);
             }

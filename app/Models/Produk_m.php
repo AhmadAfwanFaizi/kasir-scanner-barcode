@@ -7,10 +7,8 @@ use CodeIgniter\Model;
 class Produk_m extends Model
 {
 
-    protected $column_order  = array("kode_produk", "nama_produk", "kategori", "satuan", "harga_produk", "stok_produk");
-    protected $column_search = array("kode_produk", "nama_produk", "kategori", "satuan", "harga_produk", "stok_produk");
-    protected $order         = array("nama_produk" => "asc");
-
+    protected $colOrderAndSearch = array("kode_produk", "nama_produk", "kategori", "satuan", "harga_produk", "stok_produk");
+    protected $order             = array("nama_produk" => "asc");
 
     public function __construct()
     {
@@ -27,7 +25,7 @@ class Produk_m extends Model
     private function _getDataTablesQuery($post = null)
     {
         $i = 0;
-        foreach ($this->column_search as $item) {
+        foreach ($this->colOrderAndSearch as $item) {
             if (isset($post["search"]["value"])) {
                 if ($i === 0) {
                     $this->dataTable->groupStart();
@@ -35,39 +33,40 @@ class Produk_m extends Model
                 } else {
                     $this->dataTable->orLike($item, $post["search"]["value"]);
                 }
-                if (count($this->column_search) - 1 == $i)
+                if (count($this->colOrderAndSearch) - 1 == $i)
                     $this->dataTable->groupEnd();
             }
             $i++;
         }
         if (isset($post["order"])) {
-            $this->dataTable->orderBy($this->column_order[$post["order"]["0"]["column"]], $post["order"]["0"]["dir"]);
+            $this->dataTable->orderBy($this->colOrderAndSearch[$post["order"]["0"]["column"]], $post["order"]["0"]["dir"]);
         } else if (isset($this->order)) {
             $order = $this->order;
             $this->dataTable->orderBy(key($order), $order[key($order)]);
         }
+        return $this;
     }
     function getDataTables($post)
     {
         $this->_getDataTablesQuery($post);
         if ($post["length"] != -1)
             $this->dataTable->limit($post["length"], $post["start"]);
-        $this->join;
-        $this->dataTable->where("P.dihapus", NULL);
+        if ($this->join) $this->join;
+        if ($this->where) $this->where;
         $query = $this->dataTable->get();
         return $query->getResult();
     }
     function countFiltered()
     {
         $this->_getDataTablesQuery();
-        $this->join;
-        $this->dataTable->where("P.dihapus", NULL);
+        if ($this->join) $this->join;
+        if ($this->where) $this->where;
         return $this->dataTable->countAllResults();
     }
     public function countAll()
     {
-        $this->join;
-        $this->dataTable->where("P.dihapus", NULL);
+        if ($this->join) $this->join;
+        if ($this->where) $this->where;
         return $this->countAllResults();
     }
 

@@ -100,7 +100,7 @@
                 type: "POST",
             },
             "columnDefs": [{
-                "targets": [0],
+                "targets": [0, 3, 4, 6, 7],
                 "orderable": false,
             }]
         });
