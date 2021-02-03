@@ -31,6 +31,9 @@
     <link rel="stylesheet" href="<?= base_url() ?>/assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <!-- Toastr -->
     <link rel="stylesheet" href="<?= base_url() ?>/assets/plugins/toastr/toastr.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="<?= base_url() ?>/assets/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>/assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -220,6 +223,8 @@
     <script src="<?= base_url() ?>/assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
     <!-- Toastr -->
     <script src="<?= base_url() ?>/assets/plugins/toastr/toastr.min.js"></script>
+    <!-- Select2 -->
+    <script src="<?= base_url() ?>/assets/plugins/select2/js/select2.full.min.js"></script>
     <script>
         function notif(pesan) {
             toastr.success(pesan);

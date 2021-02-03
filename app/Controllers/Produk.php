@@ -35,6 +35,13 @@ class Produk extends BaseController
         else return json_encode($data);
     }
 
+    public function getSelect()
+    {
+        $param = $this->request->getGet('search');
+        $data = $this->produk_m->getSelect($param);
+        return json_encode($data);
+    }
+
     public function selectInputProduk()
     {
         $data = [

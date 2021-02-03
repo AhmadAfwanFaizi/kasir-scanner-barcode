@@ -20,6 +20,18 @@ class Stok extends BaseController
         return view('stok/data', $data);
     }
 
+    public function getDataStok($param = null)
+    {
+        if ($param) $post = $param;
+        else $post = $this->request->getPost();
+
+        $data = $this->stok_m->getDataStok($post);
+        var_dump($post, $data);
+        die;
+        if ($param) return $data;
+        else return json_encode($data);
+    }
+
     public function getDataTableStok()
     {
         if ($this->request->getMethod(true) == "POST") {
@@ -34,9 +46,10 @@ class Stok extends BaseController
                 $row[] = $list->kode_produk;
                 $row[] = $list->nama_produk;
                 $row[] = $list->satuan;
-                $row[] = $list->stok_produk;
-                $row[] = '<button type="button" class="btn btn-sm btn-success" onclick="formTambahDataStok(' . "'" . $list->kode_produk . "'" . ')"><i class="fas fa-plus"></i></button> ' .
-                    '<button type="button" class="btn btn-sm btn-danger" onclick="formKurangDataStok(' . "'" . $list->kode_produk . "'" . ')"><i class="fas fa-minus"></i></button>';
+                $row[] = $list->jumlah;
+                $row[] = $list->nama_supplier;
+                $row[] = $list->dibuat;
+                $row[] = '<button type="button" class="btn btn-sm btn-warning" onclick="formUbahDataStok(' . "'" . $list->id_stok . "'" . ')"><i class="fas fa-edit"></i></button> ';
 
                 $data[] = $row;
             }
@@ -47,6 +60,43 @@ class Stok extends BaseController
                 "data"            => $data,
             ];
             return json_encode($output);
+        }
+    }
+
+    public function tambah()
+    {
+        $post = $this->request->getPost();
+        // var_dump($post);
+        // die;
+        $this->stok_m->tambah($post);
+        if ($this->db->affectedRows()) {
+            return "200";
+        }
+    }
+
+    public function ubah()
+    {
+        $post = $this->request->getPost();
+        $this->stok_m->ubah($post);
+        if ($this->db->affectedRows()) {
+            $data = [
+                "status" => "200",
+                // "data" => $this->getDataSupplier($post),
+            ];
+            return json_encode($data);
+        }
+    }
+
+    public function hapus()
+    {
+        $post = $this->request->getPost();
+        $c = $this->stok_m->hapus($post);
+        if ($this->db->affectedRows()) {
+            $data = [
+                "status" => "200"
+            ];
+
+            return json_encode($data);
         }
     }
 

@@ -76,6 +76,19 @@ class Produk_m extends Model
         else return $this->builder->get()->getResult();
     }
 
+    public function getSelect($param = null)
+    {
+        if ($param) {
+            $data =  $this->builder->like("kode_produk", $param)
+                ->orLike("nama_produk", $param)
+                ->limit(20)
+                ->get()->getResult();
+        } else {
+            $data =  $this->builder->limit(20)->get()->getResult();
+        }
+        return $data;
+    }
+
     public function tambah($post)
     {
         $data = [

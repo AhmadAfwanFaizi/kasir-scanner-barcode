@@ -62,9 +62,23 @@ class Supplier_m extends Model
         return $this->builder->countAllResults();
     }
 
-    public function getDataSupplier($post)
+    public function getDataSupplier($post = null)
     {
-        return $this->builder->getWhere(["kode_supplier" => $post["kodeSupplier"]])->getRow();
+        if ($post) return $this->builder->getWhere(["kode_supplier" => $post["kodeSupplier"]])->getRow();
+        else return $this->builder->get()->getResult();
+    }
+
+    public function getSelect($param = null)
+    {
+        if ($param) {
+            $data =  $this->builder->like("kode_supplier", $param)
+                ->orLike("nama_supplier", $param)
+                ->limit(20)
+                ->get()->getResult();
+        } else {
+            $data =  $this->builder->limit(20)->get()->getResult();
+        }
+        return $data;
     }
 
     public function tambah($post)

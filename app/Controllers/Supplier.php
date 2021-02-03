@@ -59,6 +59,13 @@ class Supplier extends BaseController
         }
     }
 
+    public function getSelect()
+    {
+        $param = $this->request->getGet('search');
+        $data = $this->supplier_m->getSelect($param);
+        return json_encode($data);
+    }
+
     public function tambah()
     {
         $post = $this->request->getPost();

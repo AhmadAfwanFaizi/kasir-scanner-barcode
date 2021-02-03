@@ -19,7 +19,7 @@
                                     <th>Nama Supplier</th>
                                     <th>Kontak Supplier</th>
                                     <th>Alamat Supplier</th>
-                                    <th>Opsi</th>
+                                    <th style="width: 70px;">Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>

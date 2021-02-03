@@ -21,7 +21,7 @@
                                     <th>Satuan</th>
                                     <th>Harga</th>
                                     <th>Stok</th>
-                                    <th>Opsi</th>
+                                    <th style="width: 70px;">Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>

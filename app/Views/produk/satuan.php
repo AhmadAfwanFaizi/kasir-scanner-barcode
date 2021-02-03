@@ -15,7 +15,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Satuan Produk</th>
-                                    <th>Opsi</th>
+                                    <th style="width: 70px;">Opsi</th>
                                 </tr>
                             </thead>
                             <tbody>
