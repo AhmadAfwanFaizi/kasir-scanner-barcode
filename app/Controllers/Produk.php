@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Libraries\SSD;
-
 use App\Models\Produk_m;
 use App\Models\Kategori_m;
 use App\Models\Satuan_m;

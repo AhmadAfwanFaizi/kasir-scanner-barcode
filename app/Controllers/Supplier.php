@@ -3,21 +3,18 @@
 namespace App\Controllers;
 
 use App\Models\Supplier_m;
-use App\Libraries\coba;
 
 class Supplier extends BaseController
 {
     public function __construct()
     {
         $this->supplier_m = new Supplier_m();
-        $this->coba = new coba();
     }
 
     public function index()
     {
         $data = [
-            'page' => 'data supplier',
-            'data' => $this->supplier_m->get()->getResult(),
+            'page' => 'data supplier'
         ];
 
         return view('supplier/data', $data);

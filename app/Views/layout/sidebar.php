@@ -37,28 +37,13 @@
                 </li>
             </ul>
         </li>
-        <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
+        <li class="nav-item">
+            <a href="<?= base_url() ?>/Stok" class="nav-link">
                 <i class="nav-icon fas fa-boxes"></i>
                 <p>
                     Stok
-                    <i class="right fas fa-angle-left"></i>
                 </p>
             </a>
-            <ul class="nav nav-treeview">
-                <li class="nav-item">
-                    <a href="./index.html" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Stok Masuk</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="./index2.html" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Stok Keluar</p>
-                    </a>
-                </li>
-            </ul>
         </li>
         <li class="nav-item">
             <a href="<?= base_url() ?>/Supplier" class="nav-link">
