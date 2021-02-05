@@ -22,7 +22,36 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div style="padding: 10px;">
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" onclick="formTambahDataStok()">Tambah</button>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" onclick="formTambahDataStok('MASUK')">Tambah</button>
+                                        </div>
+
+                                        <div>
+                                            <table id="tabelDataStokMasuk" class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Kode Produk</th>
+                                                        <th>Nama Produk</th>
+                                                        <th>Satuan</th>
+                                                        <th>Jumlah</th>
+                                                        <th>Supplier</th>
+                                                        <th>Waktu</th>
+                                                        <th style="width: 70px;">Opsi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-keluar" role="tabpanel" aria-labelledby="custom-tabs-one-keluar-tab">
+                                <!-- <div class="row">
+                                    <div class="col-12">
+                                        <div style="padding: 10px;">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" onclick="formTambahDataStok('KELUAR')">Tambah</button>
                                         </div>
 
                                         <div>
@@ -45,10 +74,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="custom-tabs-one-keluar" role="tabpanel" aria-labelledby="custom-tabs-one-keluar-tab">
-                                Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -104,7 +130,7 @@
 
 <script>
     $(function() {
-        $("#tabelDataStok").DataTable({
+        $("#tabelDataStokMasuk").DataTable({
             "responsive": true,
             "autoWidth": false,
             "processing": true,
@@ -112,6 +138,9 @@
             "ajax": {
                 url: "<?= base_url() ?>/Stok/getDataTableStok",
                 type: "POST",
+                data: {
+                    param: "MASUK",
+                }
             },
             "columnDefs": [{
                 "targets": [0, 3, 7],
@@ -119,19 +148,36 @@
             }],
         });
 
+        // $("#tabelDataStokKeluar").DataTable({
+        //     "responsive": true,
+        //     "autoWidth": false,
+        //     "processing": true,
+        //     "serverSide": true,
+        //     "ajax": {
+        //         url: "<?= base_url() ?>/Stok/getDataTableStok",
+        //         type: "POST",
+        //     },
+        //     "columnDefs": [{
+        //         "targets": [0, 3, 7],
+        //         "orderable": false,
+        //     }],
+        // });
+
         // $('.select2').select2();
         $('.select2bs4').select2({
             theme: 'bootstrap4'
         })
 
         loadData();
-
     });
 
-    function loadData() {
+    function loadData(produk = null, supplier = null) {
+        let placeValProduk = (produk) ? produk : 'Pilih data Produk'
+        let placeValSupplier = (supplier) ? supplier : 'Pilih data Supplier'
+
         $("#kodeProduk").select2({
             theme: 'bootstrap4',
-            placeholder: 'Pilih data Produk',
+            placeholder: placeValProduk,
             ajax: {
                 url: "<?= base_url() ?>/Produk/getSelect",
                 dataType: 'json',
@@ -156,7 +202,7 @@
 
         $("#kodeSupplier").select2({
             theme: 'bootstrap4',
-            placeholder: 'Pilih data Supplier',
+            placeholder: placeValSupplier,
             ajax: {
                 url: "<?= base_url() ?>/Supplier/getSelect",
                 dataType: 'json',
@@ -180,12 +226,19 @@
         });
     }
 
+    function resetSelect() {
+        $("#kodeProduk").empty();
+        $("#kodeSupplier").empty();
+    }
+
     function formTambahDataStok() {
         $("#btn-simpan").removeAttr("onclick");
         $("#titleFormStok").text("Tambah Data Stok Masuk");
         $("#btn-simpan").html("Tambah");
         $("#btn-simpan").attr("onclick", "tambahDataStok()");
         $("#formStok").trigger("reset");
+        resetSelect();
+        loadData();
         $("#modalFormStok").modal("show");
     }
 
@@ -201,12 +254,15 @@
                     notif('Data berhasil ditambahkan');
                     $("#tabelDataStok").DataTable().ajax.reload();
                     $("#formStok").trigger("reset");
+                    resetSelect();
                 }
             }
         });
     }
 
     function formUbahDataStok(id) {
+        resetSelect();
+        $("#jumlah").attr("readonly", "readonly");
         $("#btn-simpan").removeAttr("onclick");
         $("#titleFormStok").text("Ubah Data Stok Masuk");
         $("#btn-simpan").html("Ubah");
@@ -221,29 +277,35 @@
                 id: id
             },
             success: (res) => {
-                console.log(res);
-                // $("#idStok").val(res.id);
-                // $("#StokProduk").val(res.Stok);
+                let produk = res.kode_produk + ' - ' + res.nama_produk;
+                let supplier = res.kode_supplier + ' - ' + res.nama_supplier;
+                loadData(produk, supplier);
+                $("#kodeProduk").select2('data', {
+                    id: res.kode_produk,
+                    text: res.nama_produk
+                });
+                $("#jumlah").val(res.jumlah);
+                $("#catatan").val(res.catatan);
             }
         });
     }
 
-    // function ubahDataStok() {
-    //     const data = $("#formStok").serialize();
-    //     $.ajax({
-    //         type: "POST",
-    //         url: "<?= base_url() ?>/Stok/ubahDataStok",
-    //         dataType: "JSON",
-    //         data: data,
-    //         success: (res) => {
-    //             if (res.status == 200) {
-    //                 notif('Data berhasil diubah');
-    //                 $("#StokProduk").val(res.data.Stok);
-    //                 $("#tabelDataStok").DataTable().ajax.reload();
-    //             }
-    //         }
-    //     })
-    // }
+    function ubahDataStok() {
+        const data = $("#formStok").serialize();
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>/Stok/ubah",
+            dataType: "JSON",
+            data: data,
+            success: (res) => {
+                if (res.status == 200) {
+                    notif('Data berhasil diubah');
+                    $("#StokProduk").val(res.data.Stok);
+                    $("#tabelDataStok").DataTable().ajax.reload();
+                }
+            }
+        })
+    }
 
     // function formHapusDataStok(idStok) {
     //     $("#modalTitle").text("Hapus Data");

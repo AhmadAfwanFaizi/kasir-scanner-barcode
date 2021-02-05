@@ -6,11 +6,11 @@ use CodeIgniter\Model;
 
 class Stok_m extends Model
 {
-
-    protected $colOrderAndSearch = array("ST.id", "ST.kode_produk", "nama_produk", "satuan", "stok_produk", "nama_supplier");
+    // protected $table;
+    protected $colOrderAndSearch = array("ST.id", "ST.kode_produk", "nama_produk", "satuan", "stok_produk", "nama_supplier", "ST.dibuat");
     protected $order             = array("st.kode_produk" => "asc");
 
-    public function __construct()
+    public function __construct($param = null)
     {
         parent::__construct();
         $this->builder       = $this->db->table("stok");
@@ -18,11 +18,37 @@ class Stok_m extends Model
 
         $this->dataTable = $this->db->table("stok ST")
             ->select("ST.id as id_stok, ST.kode_produk, P.nama_produk, S.satuan, ST.jumlah, SUP.nama_supplier, ST.dibuat");
-        $this->join      = $this->dataTable->join("produk P", "P.kode_produk = ST.kode_produk");
-        $this->join      = $this->dataTable->join("satuan S", "S.id = P.id_satuan");
-        $this->join      = $this->dataTable->join("supplier SUP", "SUP.kode_supplier = ST.kode_supplier");
-        // $this->where     = $this->dataTable->where("P.dihapus", NULL);
+        $this->join  = $this->dataTable->join("produk P", "P.kode_produk = ST.kode_produk");
+        $this->join  = $this->dataTable->join("satuan S", "S.id = P.id_satuan");
+        $this->join  = $this->dataTable->join("supplier SUP", "SUP.kode_supplier = ST.kode_supplier");
+        $this->where = $this->dataTable->where("P.dihapus", NULL);
     }
+
+    // function where($param = null)
+    // {
+    //     var_dump($param);
+    //     die;
+    //     return $this->where = $this->dataTale->where($param);
+    // }
+
+    // public function table($param = null)
+    // {
+    //     $this->table = $param;
+    //     // var_dump($this);
+    //     // die;
+    //     return $this;
+    // }
+    // public function select($param = null)
+    // {
+    //     $this->select = $param;
+    //     return $this;
+    // }
+    // public function join($param = null)
+    // {
+    //     $this->join = $param;
+    //     return $this;
+    // }
+
 
     private function _getDataTablesQuery($post = null)
     {
@@ -58,23 +84,30 @@ class Stok_m extends Model
         $query = $this->dataTable->get();
         return $query->getResult();
     }
-    function countFiltered()
+    function countFiltered($param = null)
     {
         $this->_getDataTablesQuery();
         if ($this->join) $this->join;
         if ($this->where) $this->where;
         return $this->dataTable->countAllResults();
     }
-    public function countAll()
+    public function countAll($param = null)
     {
         if ($this->join) $this->join;
         if ($this->where) $this->where;
         return $this->countAllResults();
     }
 
+
+
+
+
     public function getDataStok($post = null)
     {
-        if ($post) return $this->builder->getWhere(["id" => $post["id"]])->getRow();
+        $this->builder->select("stok.*, produk.nama_produk, supplier.nama_supplier");
+        $this->builder->join("produk", "produk.kode_produk = stok.kode_produk");
+        $this->builder->join("supplier", "supplier.kode_supplier = stok.kode_supplier");
+        if ($post) return $this->builder->getWhere(["supplier.id" => $post["id"]])->getRow();
         else return $this->builder->get()->getResult();
     }
 
@@ -85,7 +118,7 @@ class Stok_m extends Model
             "kode_produk"   => $post["kodeProduk"],
             "kode_supplier" => $post["kodeSupplier"],
             "jumlah"        => $post["jumlah"],
-            "log_stok"      => "MASUK",
+            "log"           => "MASUK",
             "catatan"       => $post["catatan"]
         ];
         $this->builder->insert($data);
@@ -98,9 +131,11 @@ class Stok_m extends Model
     public function ubah($post)
     {
         $data = [
-            "nama_supplier" => $post["namaSupplier"],
-            "kontak_supplier" => $post["kontakSupplier"],
-            "alamat_supplier" => $post["alamatSupplier"],
+            "id_user"       => 1,
+            "kode_produk"   => $post["kodeProduk"],
+            "kode_supplier" => $post["kodeSupplier"],
+            // "jumlah"        => $post["jumlah"],
+            "catatan"       => $post["catatan"]
         ];
         $this->builder->where(["kode_supplier" => $post["kodeSupplier"]])->update($data);
     }

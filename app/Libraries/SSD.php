@@ -20,12 +20,30 @@ class SSD
     public function __construct($post = null)
     {
         $this->db = db_connect();
-        $this->post = $post;
+        $this->post;
+        // $this->builder;
+        // $this->select;
+        // $this->columnOrder;
+        // $this->columnSearch;
+        // $this->order;
+        // $this->selectOrder;
+        // $this->param;
+
+        // $this->where;
+        // $this->join;
+        // $this->post;
+
     }
 
     public function table($table = null)
     {
         $this->builder = $this->db->table($table);
+        return $this;
+    }
+
+    public function select($select = null)
+    {
+        $this->builder = $this->builder->select($select);
         return $this;
     }
 
@@ -43,8 +61,7 @@ class SSD
 
     public function searchAndOrder($param = null)
     {
-        // var_dump($param);
-        // die;
+
         if (strpos($param, ",")) {
             $data              = explode(",", $param);
             $this->selectOrder = $data[0];
@@ -108,7 +125,7 @@ class SSD
         $this->_getDataTablesQuery($this->post);
         if ($this->post["length"] != -1)
             $this->builder->limit($this->post["length"], $this->post["start"]);
-        var_dump($this->join);
+
         if ($this->join) $this->builder->join($this->join[0], $this->join[1]);
         if ($this->where) $this->builder->where($this->where);
         $query = $this->builder->get();
@@ -129,37 +146,4 @@ class SSD
         if ($this->where) $this->builder->where($this->where);
         return $this->builder->countAllResults();
     }
-
-    // function param($param = null)
-    // {
-    //     $this->param = $param;
-    //     return $this;
-    // }
-
-    // public function render()
-    // {
-    //     $render  = $this->select;
-    //     $lists = $this->getDataTables($this->post);
-    //     $data = [];
-    //     $no = $this->post["start"];
-    //     foreach ($lists as $listObj) {
-    //         $list = json_decode(json_encode($listObj), true);
-
-    //         $no++;
-    //         $rows   = [];
-    //         $rows[] = $no;
-
-    //         for ($i = 0; $i < count($render); $i++) {
-    //             $rows[] = $list[$render[$i]];
-    //         }
-    //         $data[]   = $rows;
-    //     }
-    //     $output = [
-    //         "draw"            => $this->post['draw'],
-    //         "recordsTotal"    => $this->countAll(),
-    //         "recordsFiltered" => $this->countFiltered(),
-    //         "data"            => $data
-    //     ];
-    //     echo json_encode($output);
-    // }
 }

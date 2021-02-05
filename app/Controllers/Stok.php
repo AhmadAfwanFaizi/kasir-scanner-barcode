@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Models\Stok_m;
 
+use App\Libraries\SSD;
+
 class Stok extends BaseController
 {
     public function __construct()
@@ -26,8 +28,6 @@ class Stok extends BaseController
         else $post = $this->request->getPost();
 
         $data = $this->stok_m->getDataStok($post);
-        var_dump($post, $data);
-        die;
         if ($param) return $data;
         else return json_encode($data);
     }
@@ -36,6 +36,13 @@ class Stok extends BaseController
     {
         if ($this->request->getMethod(true) == "POST") {
             $post = $this->request->getPost();
+            // $ssd = new SSD($post);
+
+            // $ssd->searchAndOrder("ST.id", "ST.kode_produk", "nama_produk", "satuan", "stok_produk", "nama_supplier", "ST.dibuat");
+            // $ssd->table("stok ST");
+            // $ssd->select("ST.id as id_stok, ST.kode_produk, P.nama_produk, S.satuan, ST.jumlah, SUP.nama_supplier, ST.dibuat");
+            // $ssd->join("produk P", "P.kode_produk = ST.kode_produk");
+
             $list = $this->stok_m->getDataTables($post);
             $data = [];
             $no = $this->request->getPost("start");
@@ -66,8 +73,6 @@ class Stok extends BaseController
     public function tambah()
     {
         $post = $this->request->getPost();
-        // var_dump($post);
-        // die;
         $this->stok_m->tambah($post);
         if ($this->db->affectedRows()) {
             return "200";
@@ -81,7 +86,7 @@ class Stok extends BaseController
         if ($this->db->affectedRows()) {
             $data = [
                 "status" => "200",
-                // "data" => $this->getDataSupplier($post),
+                "data" => $this->getDataStok($post),
             ];
             return json_encode($data);
         }
